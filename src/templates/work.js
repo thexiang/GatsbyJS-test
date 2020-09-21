@@ -1,37 +1,42 @@
 import React from 'react'
-import Slider from 'react-slick'
 import { HelmetDatoCms } from 'gatsby-source-datocms'
 import Img from 'gatsby-image'
 import { graphql } from 'gatsby'
 import Layout from "../components/layout"
+import SheetTabs from '../components/SheetTabs'
 
-export default ({ data }) => (
-  <Layout>
-    <article className="sheet">
-      <HelmetDatoCms seo={data.datoCmsWork.seoMetaTags} />
-      <div className="sheet__inner">
-        <h1 className="sheet__title">{data.datoCmsWork.title}</h1>
-        <p className="sheet__lead">{data.datoCmsWork.excerpt}</p>
-        <div className="sheet__slider">
-          <Slider infinite={true} slidesToShow={2} arrows>
-            {data.datoCmsWork.gallery.map(({ fluid }) => (
-              <img alt={data.datoCmsWork.title} key={fluid.src} src={fluid.src} />
-            ))}
-          </Slider>
+export default ({ data }) => {
+
+  const { datoCmsWork } = data
+
+  return (
+    <Layout>
+      <article className="sheet">
+        <HelmetDatoCms seo={datoCmsWork.seoMetaTags} />
+        <div className="sheet__inner">
+          <h1 className="sheet__title">{datoCmsWork.title}</h1>
+          <p className="sheet__lead">{datoCmsWork.excerpt}</p>
+
+          {
+            datoCmsWork.enableTabs
+            &&
+            <SheetTabs datoCmsWork={datoCmsWork}/>
+          }
+
+          <div
+            className="sheet__body"
+            dangerouslySetInnerHTML={{
+              __html: datoCmsWork.descriptionNode.childMarkdownRemark.html,
+            }}
+          />
+          <div className="sheet__gallery">
+            <Img fluid={datoCmsWork.coverImage.fluid} />
+          </div>
         </div>
-        <div
-          className="sheet__body"
-          dangerouslySetInnerHTML={{
-            __html: data.datoCmsWork.descriptionNode.childMarkdownRemark.html,
-          }}
-        />
-        <div className="sheet__gallery">
-          <Img fluid={data.datoCmsWork.coverImage.fluid} />
-        </div>
-      </div>
-    </article>
-  </Layout>
-)
+      </article>
+    </Layout>
+  )
+}
 
 export const query = graphql`
   query WorkQuery($slug: String!) {
@@ -41,11 +46,6 @@ export const query = graphql`
       }
       title
       excerpt
-      gallery {
-        fluid(maxWidth: 200, imgixParams: { fm: "jpg", auto: "compress" }) {
-          src
-        }
-      }
       descriptionNode {
         childMarkdownRemark {
           html
@@ -57,6 +57,21 @@ export const query = graphql`
           ...GatsbyDatoCmsSizes
         }
       }
+      dataset {
+        column
+        data
+      }
+      contentNode {
+        childMarkdownRemark {
+          html
+        }
+      }
+      introNode {
+        childMarkdownRemark {
+          html
+        }
+      }
+      enableTabs
     }
   }
 `
