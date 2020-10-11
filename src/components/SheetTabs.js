@@ -19,13 +19,6 @@ const SheetTabs = ({ datoCmsWork }) => {
           }}
         />
       </TabPane>
-      <TabPane tab="Content" key="2">
-        <div
-          dangerouslySetInnerHTML={{
-            __html: datoCmsWork.contentNode.childMarkdownRemark.html,
-          }}
-        />
-      </TabPane>
       <TabPane tab="Data" key="3">
         {datoCmsWork.dataset[0] && (
           <>
@@ -61,6 +54,13 @@ const SheetTabs = ({ datoCmsWork }) => {
             </Modal>
           </>
         )}
+      </TabPane>
+      <TabPane tab="Content" key="2">
+        <div
+          dangerouslySetInnerHTML={{
+            __html: datoCmsWork.contentNode.childMarkdownRemark.html,
+          }}
+        />
       </TabPane>
     </Tabs>
   );

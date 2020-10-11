@@ -29,9 +29,7 @@ export default ({ data }) => {
               __html: datoCmsWork.descriptionNode.childMarkdownRemark.html,
             }}
           />
-          <div className="sheet__gallery">
-            <Img fluid={datoCmsWork.coverImage.fluid} />
-          </div>
+
         </div>
       </article>
     </Layout>
@@ -49,12 +47,6 @@ export const query = graphql`
       descriptionNode {
         childMarkdownRemark {
           html
-        }
-      }
-      coverImage {
-        url
-        fluid(maxWidth: 600, imgixParams: { fm: "jpg", auto: "compress" }) {
-          ...GatsbyDatoCmsSizes
         }
       }
       dataset {
